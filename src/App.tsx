@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import './App.css'
-import { TextArea, Layout, Button } from '@douyinfe/semi-ui'
+import { TextArea, Layout, Button, Banner } from '@douyinfe/semi-ui'
 import ReactJson from 'react-json-view'
 import { convertJson } from './utils'
 import { History } from './history'
@@ -16,18 +16,29 @@ function App() {
     defaultValue: [],
   })
 
-  const { data, error, loading, run } = useRequest(postData, {
+  const saveRecord = useCallback(() => {
+    setRecord(record.concat(json))
+  }, [json, setRecord, record])
+
+  const { data, error, loading, run, mutate } = useRequest(postData, {
     manual: true,
+    onBefore: () => {},
+    onSuccess: ({ data }) => {
+      if (data?.errors === false) {
+        console.log('success')
+        saveRecord()
+      }
+      console.log('data', data)
+    },
   })
 
   const sendRequest = useCallback(() => {
+    mutate(null)
     const json = convertJson(inputValue)
     if (!json) return
     setJson(json)
-    run()
-    console.log('json', json)
-    setRecord(record.concat(json))
-  }, [inputValue])
+    run(json)
+  }, [record, setRecord, inputValue])
 
   return (
     <Layout className="components-layout-demo">
@@ -46,9 +57,21 @@ function App() {
               onChange={setInputValue}
               style={{
                 width: '100%',
+                marginBottom: '24px',
               }}
               showClear
             />
+            {data && <Banner type="success" description="发送成功" />}
+            {loading && <Banner type="info" description="发送中" />}
+            {error && !loading && (
+              <>
+                <Banner type="danger" description={error.message} />
+                <Banner
+                  type="danger"
+                  description="发送失败，点击发送重新发送"
+                />
+              </>
+            )}
             <Button loading={loading} onClick={sendRequest}>
               发送
             </Button>
@@ -57,7 +80,8 @@ function App() {
             <ReactJson enableClipboard={false} src={json} />
           </div>
         </Content>
-        <History record={record} />
+
+        <History record={record} setRecord={setRecord} />
       </Layout>
       <Footer></Footer>
     </Layout>

@@ -6,6 +6,18 @@ const username = 'zhengda',
   password = '!!Zhengda2023!!'
 const URL = 'https://cgu78ku1p4.us.aircode.run/hello'
 
-export async function postData(data = {}) {
-  return axios.get(URL)
+const appendIndexObject = (data) => {
+  const object = { index: {} }
+  let result = []
+  data.forEach((item) => {
+    result = result.concat([object, item])
+  })
+  return result
+}
+
+export async function postData(data = []) {
+  const result = appendIndexObject(data)
+  return axios.post(URL, {
+    data: result,
+  })
 }
