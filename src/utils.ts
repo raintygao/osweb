@@ -3,6 +3,7 @@ import { schemaKeys } from './constants'
 export const convertJson = (input: string) => {
   const rows = input.split(/\r?\n/)
   const validRows = rows.filter((row) => row.length > 0)
+  if (validRows.length === 0) return
   const result = validRows.map((row) => {
     return buildJson(row)
   })

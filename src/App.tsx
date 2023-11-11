@@ -4,8 +4,9 @@ import { TextArea, Layout, Button } from '@douyinfe/semi-ui'
 import ReactJson from 'react-json-view'
 import { convertJson } from './utils'
 import { History } from './history'
-import { useLocalStorageState } from 'ahooks'
+import { useLocalStorageState, useRequest } from 'ahooks'
 import { STORAGE_KEY } from './constants'
+import { postData } from './request'
 
 function App() {
   const { Header, Footer, Content } = Layout
@@ -15,9 +16,15 @@ function App() {
     defaultValue: [],
   })
 
+  const { data, error, loading, run } = useRequest(postData, {
+    manual: true,
+  })
+
   const sendRequest = useCallback(() => {
     const json = convertJson(inputValue)
+    if (!json) return
     setJson(json)
+    run()
     console.log('json', json)
     setRecord(record.concat(json))
   }, [inputValue])
@@ -42,7 +49,9 @@ function App() {
               }}
               showClear
             />
-            <Button onClick={sendRequest}>发送</Button>
+            <Button loading={loading} onClick={sendRequest}>
+              发送
+            </Button>
           </div>
           <div style={{ flexGrow: 1 }}>
             <ReactJson enableClipboard={false} src={json} />
