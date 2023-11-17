@@ -44,8 +44,16 @@ function App() {
     const json = convertJson(pageId, inputValue)
     if (!json) return
     setJson(json)
-    run(indexName, json)
-  }, [record, setRecord, inputValue])
+    const combinedConstJson = json.map((item) => {
+      return {
+        ...item,
+        ...Schema[Number(pageId) - 1].constants,
+        timestamp: Date.now(),
+      }
+    })
+    console.log('json', combinedConstJson)
+    run(indexName, combinedConstJson)
+  }, [record, setRecord, inputValue, pageId])
 
   return (
     <Layout className="components-layout-demo">

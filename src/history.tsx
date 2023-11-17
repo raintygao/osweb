@@ -1,4 +1,5 @@
 import { Typography, List, Button } from '@douyinfe/semi-ui'
+import React from 'react'
 
 export const History = ({ record, setRecord }) => {
   return (

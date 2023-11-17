@@ -16,9 +16,9 @@ const appendIndexObject = (data) => {
 }
 
 export async function postData(indexName, data = []) {
-  console.log('indexname', indexName)
   const result = appendIndexObject(data)
   return axios.post(URL, {
+    index: indexName,
     data: result,
   })
 }
