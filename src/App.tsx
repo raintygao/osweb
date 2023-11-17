@@ -34,7 +34,7 @@ function App() {
     return schema.index
   }, [pageId])
 
-  const textRef = useRef()
+  const textRef = useRef<HTMLTextAreaElement>()
 
   const saveRecord = useCallback(() => {
     const transformsSpaceInput = inputValue.replaceAll(/\n+/g, '\n')
