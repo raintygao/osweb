@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import './App.css'
 import { TextArea, Layout, Button, Banner } from '@douyinfe/semi-ui'
 import ReactJson from 'react-json-view'
@@ -7,6 +7,8 @@ import { History } from './history'
 import { useLocalStorageState, useRequest } from 'ahooks'
 import { STORAGE_KEY } from './constants'
 import { postData } from './request'
+import { useParams } from 'react-router-dom'
+import { Schema } from './constants'
 
 function App() {
   const { Header, Footer, Content } = Layout
@@ -15,6 +17,11 @@ function App() {
   const [record, setRecord] = useLocalStorageState(STORAGE_KEY, {
     defaultValue: [],
   })
+  const { id: pageId } = useParams()
+  const indexName = useMemo(() => {
+    const schema = Schema[Number(pageId) - 1]
+    return schema.index
+  }, [pageId])
 
   const saveRecord = useCallback(() => {
     setRecord(record.concat(json))
@@ -34,10 +41,10 @@ function App() {
 
   const sendRequest = useCallback(() => {
     mutate(null)
-    const json = convertJson(inputValue)
+    const json = convertJson(pageId, inputValue)
     if (!json) return
     setJson(json)
-    run(json)
+    run(indexName, json)
   }, [record, setRecord, inputValue])
 
   return (
