@@ -44,8 +44,10 @@ function App() {
     onBefore: () => {},
     onSuccess: ({ data }) => {
       if (data?.errors === false) {
-        console.log('success')
         saveRecord()
+      } else if (data?.errors === true) {
+        console.error(data?.error)
+        throw new Error('服务端存储失败')
       }
       console.log('data', data)
     },
@@ -88,7 +90,7 @@ function App() {
               }}
               showClear
             />
-            {data && <Banner type="success" description="发送成功" />}
+            {!error && data && <Banner type="success" description="发送成功" />}
             {loading && <Banner type="info" description="发送中" />}
             {error && !loading && (
               <>
