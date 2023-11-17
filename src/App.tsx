@@ -10,12 +10,23 @@ import { postData } from './request'
 import { useParams } from 'react-router-dom'
 import { Schema } from './constants'
 
+function getQueryVariable(variable) {
+  var query = window.location.search.substring(1)
+  var vars = query.split('&')
+  for (var i = 0; i < vars.length; i++) {
+    var pair = vars[i].split('=')
+    if (pair[0] == variable) {
+      return pair[1]
+    }
+  }
+  return false
+}
+
 function App() {
   const { Header, Footer, Content } = Layout
   const [inputValue, setInputValue] = useState('')
   const [json, setJson] = useState([])
-  const { id: pageId } = useParams()
-  console.log('pageid', pageId)
+  const pageId = getQueryVariable('id')
   const [record, setRecord] = useLocalStorageState(`${STORAGE_KEY}_${pageId}`, {
     defaultValue: [],
   })
