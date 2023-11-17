@@ -7,10 +7,10 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 root.render(
-  <BrowserRouter>
+  <BrowserRouter basename="/">
     <React.StrictMode>
       <Routes>
-        <Route path="/:id" element={<App />} />
+        <Route path=":id" element={<App />} />
       </Routes>
     </React.StrictMode>
   </BrowserRouter>

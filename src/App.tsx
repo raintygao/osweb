@@ -15,7 +15,7 @@ function App() {
   const [inputValue, setInputValue] = useState('')
   const [json, setJson] = useState([])
   const { id: pageId } = useParams()
-
+  console.log('pageid', pageId)
   const [record, setRecord] = useLocalStorageState(`${STORAGE_KEY}_${pageId}`, {
     defaultValue: [],
   })
