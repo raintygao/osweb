@@ -14,10 +14,11 @@ function App() {
   const { Header, Footer, Content } = Layout
   const [inputValue, setInputValue] = useState('')
   const [json, setJson] = useState([])
-  const [record, setRecord] = useLocalStorageState(STORAGE_KEY, {
+  const { id: pageId } = useParams()
+
+  const [record, setRecord] = useLocalStorageState(`${STORAGE_KEY}_${pageId}`, {
     defaultValue: [],
   })
-  const { id: pageId } = useParams()
   const indexName = useMemo(() => {
     const schema = Schema[Number(pageId) - 1]
     return schema.index
