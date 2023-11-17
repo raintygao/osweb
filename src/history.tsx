@@ -15,7 +15,9 @@ export const History = ({ record, setRecord }) => {
         bordered
         dataSource={record}
         renderItem={(item) => (
-          <List.Item style={{ whiteSpace: 'pre-line' }}>{item}</List.Item>
+          <List.Item style={{ whiteSpace: 'pre-line' }}>
+            {typeof item !== 'string' ? JSON.stringify(item) : item}
+          </List.Item>
         )}
       />
     </div>
