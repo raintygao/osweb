@@ -10,7 +10,7 @@ export const schemaKeys = [
 export const Schema = [
   {
     index: 'receipts',
-    keys: ['addr', 'id', 'area', 'building', 'room', 'version'],
+    keys: ['id', 'area', 'building', 'room', 'version'],
     isNumber: {
       id: true,
       area: true,
@@ -22,16 +22,7 @@ export const Schema = [
   },
   {
     index: 'votes',
-    keys: [
-      'addr',
-      'id',
-      'area',
-      'building',
-      'room',
-      'topic',
-      'result',
-      'version',
-    ],
+    keys: ['id', 'area', 'building', 'room', 'topic', 'result', 'version'],
     isNumber: {
       id: true,
       area: true,
@@ -43,16 +34,7 @@ export const Schema = [
   },
   {
     index: 'prevotes',
-    keys: [
-      'addr',
-      'id',
-      'area',
-      'building',
-      'room',
-      'topic',
-      'result',
-      'version',
-    ],
+    keys: ['id', 'area', 'building', 'room', 'topic', 'result', 'version'],
     isNumber: {
       id: true,
       area: true,
