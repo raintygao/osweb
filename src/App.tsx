@@ -8,6 +8,7 @@ import { useLocalStorageState, useRequest } from 'ahooks'
 import { STORAGE_KEY } from './constants'
 import { postData } from './request'
 import { Schema } from './constants'
+import { cloneDeep } from 'lodash-es'
 
 function getQueryVariable(variable) {
   var query = window.location.search.substring(1)
@@ -35,11 +36,18 @@ function App() {
   }, [pageId])
 
   const textRef = useRef<HTMLTextAreaElement>()
+  const [showJson, setShowJson] = useState(false)
+
+  const setJsonShow = useCallback(() => {
+    setShowJson(!showJson)
+  }, [showJson])
 
   const saveRecord = useCallback(() => {
     const transformsSpaceInput = inputValue.replaceAll(/\n+/g, '\n')
-    setRecord(record.concat(transformsSpaceInput))
+    const clonedRecord = cloneDeep(record)
+    clonedRecord.unshift(transformsSpaceInput)
     // setRecord(record.concat(inputValue))
+    setRecord(clonedRecord)
   }, [inputValue, setRecord, record])
 
   const { data, error, loading, run, mutate } = useRequest(postData, {
@@ -117,9 +125,14 @@ function App() {
               发送
             </Button>
           </div>
-          <div style={{ flexGrow: 1 }}>
-            <ReactJson enableClipboard={false} src={json} />
-          </div>
+          {showJson && (
+            <div style={{ flexGrow: 1 }}>
+              <ReactJson enableClipboard={false} src={json} />
+            </div>
+          )}
+          <Button onClick={setJsonShow}>
+            {showJson ? '隐藏JSON预览' : '展示JSON预览'}
+          </Button>
         </Content>
 
         <History record={record} setRecord={setRecord} />
