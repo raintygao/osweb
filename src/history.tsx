@@ -5,7 +5,7 @@ export const History = ({ record, setRecord }) => {
   return (
     <div style={{ marginTop: '24px' }}>
       <Typography.Title heading={3} style={{ margin: '8px 0' }}>
-        历史记录{' '}
+        发送成功记录{' '}
         <Button type="tertiary" onClick={() => setRecord([])}>
           清空
         </Button>
@@ -14,7 +14,9 @@ export const History = ({ record, setRecord }) => {
       <List
         bordered
         dataSource={record}
-        renderItem={(item) => <List.Item>{JSON.stringify(item)}</List.Item>}
+        renderItem={(item) => (
+          <List.Item style={{ whiteSpace: 'pre-line' }}>{item}</List.Item>
+        )}
       />
     </div>
   )

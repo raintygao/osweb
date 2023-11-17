@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useRef, useState } from 'react'
 import './App.css'
 import { TextArea, Layout, Button, Banner } from '@douyinfe/semi-ui'
 import ReactJson from 'react-json-view'
@@ -7,7 +7,6 @@ import { History } from './history'
 import { useLocalStorageState, useRequest } from 'ahooks'
 import { STORAGE_KEY } from './constants'
 import { postData } from './request'
-import { useParams } from 'react-router-dom'
 import { Schema } from './constants'
 
 function getQueryVariable(variable) {
@@ -35,9 +34,13 @@ function App() {
     return schema.index
   }, [pageId])
 
+  const textRef = useRef()
+
   const saveRecord = useCallback(() => {
-    setRecord(record.concat(json))
-  }, [json, setRecord, record])
+    const transformsSpaceInput = inputValue.replaceAll(/\n+/g, '\n')
+    setRecord(record.concat(transformsSpaceInput))
+    // setRecord(record.concat(inputValue))
+  }, [inputValue, setRecord, record])
 
   const { data, error, loading, run, mutate } = useRequest(postData, {
     manual: true,
@@ -45,9 +48,17 @@ function App() {
     onSuccess: ({ data }) => {
       if (data?.errors === false) {
         saveRecord()
+        setInputValue('')
+        if (textRef?.current && textRef?.current?.focus) {
+          textRef?.current?.focus()
+        }
       } else if (data?.errors === true) {
         console.error(data?.error)
-        throw new Error('服务端存储失败')
+        if (data.message) {
+          throw new Error(data.message)
+        } else {
+          throw new Error('服务端存储失败')
+        }
       }
       console.log('data', data)
     },
@@ -81,7 +92,7 @@ function App() {
         >
           <div style={{ flexGrow: 2 }}>
             <TextArea
-              autosize
+              autosize={{ minRows: 25 }}
               value={inputValue}
               onChange={setInputValue}
               style={{
@@ -89,6 +100,7 @@ function App() {
                 marginBottom: '24px',
               }}
               showClear
+              ref={textRef}
             />
             {!error && data && <Banner type="success" description="发送成功" />}
             {loading && <Banner type="info" description="发送中" />}

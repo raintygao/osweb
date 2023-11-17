@@ -18,8 +18,14 @@ const appendIndexObject = (data) => {
 
 export async function postData(indexName, data = []) {
   const result = appendIndexObject(data)
-  return axios.post(LAF_URL, {
-    index: indexName,
-    data: result,
-  })
+  return axios.post(
+    LAF_URL,
+    {
+      index: indexName,
+      data: result,
+    },
+    {
+      timeout: 2000,
+    }
+  )
 }
